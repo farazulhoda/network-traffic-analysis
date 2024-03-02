@@ -21,7 +21,7 @@ This project is a Python script for capturing and analyzing network traffic, foc
 1. Clone the repository:
 
     ```sh
-    git clone https://github.com/yourusername/network-traffic-analyzer.git
+    git clone https://github.com/farazulhoda/network-traffic-analyzer.git
     ```
 
 2. Install dependencies:
