@@ -2,6 +2,7 @@ import pandas as pd
 from scapy.all import sniff
 from scapy.layers.inet import IP, TCP, UDP
 from scapy.layers.dns import DNS, DNSQR, DNSRR
+import whois
 import tkinter as tk
 from tkinter import ttk
 
@@ -33,15 +34,37 @@ def packet_callback(packet):
             dns_query = None
             dns_answer = None
 
-        # Append packet information to the global data list
-        data.append([src_ip, dst_ip, src_port, dst_port, dns_query, dns_answer])
+        # Perform WHOIS lookup for source and destination IP addresses
+        src_whois = get_whois_info(src_ip)
+        dst_whois = get_whois_info(dst_ip)
 
-def show_data():
+        # Check for suspicious traffic patterns
+        if dns_query:
+            print(f"Suspicious DNS query detected: {dns_query}")
+
+        # Early detection of potential attacks
+        if src_port == 6667 or dst_port == 6667:  # Example of detecting traffic on a known malicious port
+            print("Potential IRC traffic detected, possible indicator of malware activity")
+
+        # Identify vulnerabilities
+        if src_ip == "192.168.1.1":  # Example of identifying traffic originating from a vulnerable host
+            print("Vulnerability detected: Traffic originating from vulnerable IP address")
+
+        # Append packet information to the global data list
+        data.append([src_ip, src_whois, dst_ip, dst_whois, src_port, dst_port, dns_query, dns_answer])
+
+def get_whois_info(ip):
+    try:
+        return whois.whois(ip)
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+def show_gui():
     root = tk.Tk()
-    root.title("Captured Network Data")
+    root.title("Captured Network Traffic")
 
     tree = ttk.Treeview(root)
-    tree["columns"] = ("Source IP", "Destination IP", "Source Port", "Destination Port", "DNS Query", "DNS Answer")
+    tree["columns"] = ("Source IP", "Source WHOIS", "Destination IP", "Destination WHOIS", "Source Port", "Destination Port", "DNS Query", "DNS Answer")
     tree.heading("#0", text="Packet #")
     tree.column("#0", width=50, stretch=tk.NO)
     for col in tree["columns"]:
@@ -69,5 +92,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error capturing traffic: {str(e)}")
 
-    # Display the data using the GUI
-    show_data()
+    # Display the GUI
+    show_gui()
