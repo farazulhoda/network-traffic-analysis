@@ -1,9 +1,11 @@
-# Author : Farazul Hoda
-
 import pandas as pd
 from scapy.all import sniff
 from scapy.layers.inet import IP, TCP, UDP
 from scapy.layers.dns import DNS, DNSQR, DNSRR
+import tkinter as tk
+from tkinter import ttk
+
+data = []
 
 def packet_callback(packet):
     global data
@@ -31,8 +33,27 @@ def packet_callback(packet):
             dns_query = None
             dns_answer = None
 
-        # Append packet information to the DataFrame
+        # Append packet information to the global data list
         data.append([src_ip, dst_ip, src_port, dst_port, dns_query, dns_answer])
+
+def show_data():
+    root = tk.Tk()
+    root.title("Captured Network Data")
+
+    tree = ttk.Treeview(root)
+    tree["columns"] = ("Source IP", "Destination IP", "Source Port", "Destination Port", "DNS Query", "DNS Answer")
+    tree.heading("#0", text="Packet #")
+    tree.column("#0", width=50, stretch=tk.NO)
+    for col in tree["columns"]:
+        tree.heading(col, text=col)
+        tree.column(col, width=150, stretch=tk.NO)
+
+    for i, packet in enumerate(data):
+        tree.insert("", "end", text=str(i+1), values=packet)
+
+    tree.pack(expand=True, fill=tk.BOTH)
+
+    root.mainloop()
 
 if __name__ == "__main__":
     # Set the network interface to capture traffic from
@@ -42,17 +63,11 @@ if __name__ == "__main__":
     FILTER = "udp port 53"
 
     # Start capturing network traffic using scapy
-    print("Capturing network traffic on interface", INTERFACE)
-    data = []
-    sniff(iface=INTERFACE, filter=FILTER, prn=packet_callback, store=False, timeout=30)
+    print("Capturing network traffic...")
+    try:
+        sniff(iface=INTERFACE, filter=FILTER, prn=packet_callback, store=False, timeout=30)
+    except Exception as e:
+        print(f"Error capturing traffic: {str(e)}")
 
-    # Convert captured packets to a DataFrame
-    columns = ["Source IP", "Destination IP", "Source Port", "Destination Port", "DNS Query", "DNS Answer"]
-    df = pd.DataFrame(data, columns=columns)
-
-    # Save the DataFrame to a CSV file
-    df.to_csv("analyzed_traffic.csv", index=False)
-
-    # Display the analyzed traffic
-    print("Analyzed traffic saved in analyzed_traffic.csv:")
-    print(df)
+    # Display the data using the GUI
+    show_data()
