@@ -1,26 +1,55 @@
-# Network Traffic Analysis Tool
-Network traffic analysis across various application and network layers. Helps to capture network traffic using tcpdump, filters the captured packets with tshark, and extracts information about different protocol layers using tshark and awk.
+# Network Traffic Analyzer
 
-## HOW TO RUN?
+This project is a Python script for capturing and analyzing network traffic, focusing on DNS traffic, using the Scapy library. It provides a simple interface for monitoring network activity and extracting relevant information from captured packets.
 
-- Remember to run this script with appropriate permissions (e.g., using sudo) since capturing network traffic typically requires administrative privileges.
+## Features
 
-- Ensure that tcpdump and tshark are installed on your system before running the script.
+- Captures network traffic on a specified network interface.
+- Filters traffic based on user-defined criteria (e.g., port number, protocol).
+- Extracts information from DNS packets, including DNS queries and answers.
+- Integrates WHOIS lookup for source and destination IP addresses.
+- Saves analyzed traffic data to a CSV file for further analysis.
 
-### This script performs the following steps:
+## Requirements
 
-- Captures network traffic using tcpdump on the specified interface ($INTERFACE) and applies an optional filter expression ($FILTER).
+- Python 3.x
+- Scapy library
+- python-whois library
 
-- Monitors the capture process and ensures that tcpdump is running.
+## Installation
 
-- Captures traffic for a specified duration (e.g., 30 seconds).
+1. Clone the repository:
 
-- Stops the tcpdump process.
+    ```sh
+    git clone https://github.com/yourusername/network-traffic-analyzer.git
+    ```
 
-- Analyzes the captured traffic using tshark and extracts information about various protocol layers such as IP addresses, ports, HTTP host, HTTP request URI, DNS queries, and SSL/TLS server names.
+2. Install dependencies:
 
-- Saves the analyzed traffic information in a CSV file (analyzed_traffic.csv).
+    ```sh
+    pip install scapy python-whois
+    ```
 
-- Displays the analyzed traffic on the console.
+## Usage
 
-- Cleans up by removing the captured traffic file ($OUTPUT_FILE).
+1. Navigate to the project directory:
+
+    ```sh
+    cd network-traffic-analyzer
+    ```
+
+2. Run the script:
+
+    ```sh
+    sudo python3 network_analyzer.py
+    ```
+
+3. Follow the on-screen instructions to capture and analyze network traffic.
+
+## Contributing
+
+Contributions are welcome! Feel free to submit bug reports, feature requests, or pull requests.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
