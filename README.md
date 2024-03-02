@@ -38,13 +38,19 @@ This project is a Python script for capturing and analyzing network traffic, foc
     cd network-traffic-analyzer
     ```
 
-2. Run the script:
+2. Navigate to src folder:
+
+    ```sh
+    cd src
+    ```
+
+3. Run the script:
 
     ```sh
     sudo python3 network_analyzer.py
     ```
 
-3. Follow the on-screen instructions to capture and analyze network traffic.
+4. Follow the on-screen instructions to capture and analyze network traffic.
 
 ## Contributing
 
